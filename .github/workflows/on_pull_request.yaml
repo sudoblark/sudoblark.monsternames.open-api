@@ -2,11 +2,6 @@ name: OpenAPI checks on pull request
 
 env:
   OPEN_API_YAML_PATH: open-api.yaml
-  AWS_ACCESS_KEY_ID: ${{ secrets.SUDOBLARK_AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.SUDOBLARK_AWS_ACCESS_KEY_VALUE }}
-  AWS_DEFAULT_REGION: eu-west-2
-  # Automatically generated token unique to this repo per workflow execution
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on: [pull_request]
 
