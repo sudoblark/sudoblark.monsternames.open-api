@@ -25,4 +25,4 @@ jobs:
         uses: mbowman100/swagger-validator-action@master
         with:
           files: |
-            ${env.OPEN_API_YAML_PATH}
+            ${{ env.OPEN_API_YAML_PATH }}
