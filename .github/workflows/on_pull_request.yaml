@@ -7,8 +7,6 @@ env:
   AWS_DEFAULT_REGION: eu-west-2
   # Automatically generated token unique to this repo per workflow execution
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  # Stops homebrew auto-updating everything else
-  HOMEBREW_NO_AUTO_UPDATE: 1
 
 on: [pull_request]
 
@@ -23,13 +21,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup homewbrew
-        run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
       - name: Install npm
         run: |
+          # Homebrew is included on agents by default: 
+          # https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2004-Readme.md
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install npm
+        env:
+          # Stops homebrew auto-updating everything else
+          HOMEBREW_NO_AUTO_UPDATE: 1
 
       - name: Install swagger-cli
         run: |
