@@ -40,6 +40,7 @@ jobs:
         if: always()
         uses: peter-evans/create-or-update-comment@v3
         with:
+          issue-number: ${{ github.event.number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
