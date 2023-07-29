@@ -1,4 +1,4 @@
-name: OpenAPI checks on pull request
+name: Publish OpenAPI to S3 on merge to main
 
 env:
   OPEN_API_YAML_PATH: open-api.yaml
