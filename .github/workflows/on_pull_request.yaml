@@ -7,6 +7,8 @@ env:
   AWS_DEFAULT_REGION: eu-west-2
   # Automatically generated token unique to this repo per workflow execution
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Stops homebrew auto-updating everything else
+  HOMEBREW_NO_AUTO_UPDATE: 1
 
 on: [pull_request]
 
@@ -21,20 +23,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Validator
-        id: validator
-        uses: mbowman100/swagger-validator-action@master
-        with:
-          files: |
-            ${{ env.OPEN_API_YAML_PATH }}
+      - name: Setup homewbrew
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-      - name: Find Comment
-        if: always()
-        uses: peter-evans/find-comment@v2
-        id: find-comment
-        with:
-          issue-number: ${{ github.event.number }}
-          comment-author: 'github-actions[bot]'
+      - name: Install npm
+        run: |
+          brew install npm
+
+      - name: Install swagger-cli
+        run: |
+          npm install -g @apidevtools/swagger-cli
+
+      - name: Run swagger-cli
+        id: validator
+        run: |
+          swagger-cli validate ${{ env. OPEN_API_YAML_PATH}}
 
       - name: Create/Replace comment
         if: always()
