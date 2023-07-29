@@ -30,7 +30,7 @@ jobs:
 
       - name: Find Comment
         uses: peter-evans/find-comment@v2
-        id: fc
+        id: find-comment
         with:
           issue-number: ${{ github.event.number }}}
           comment-author: 'github-actions[bot]'
