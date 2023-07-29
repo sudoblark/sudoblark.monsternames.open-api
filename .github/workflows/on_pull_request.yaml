@@ -32,7 +32,7 @@ jobs:
         uses: peter-evans/find-comment@v2
         id: fc
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ github.event.number }}}
           comment-author: 'github-actions[bot]'
 
       - name: Create/Replace comment
