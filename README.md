@@ -32,6 +32,7 @@
         <li><a href="#running-swaggerui">Running SwaggerUI</a></li>
       </ul>
     </li>
+    <li><a href="#ci-cd-setup">CI/CD Setup</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -109,6 +110,26 @@ docker run -it \
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+f<!-- CI/CD -->
+## CI/CD setup
+
+```mermaid
+flowchart TD
+
+    subgraph open_pull_request[Open Pull Request]
+        validator[Validate Swagger]
+    end
+
+    subgraph on_tag[On tag]
+        create_artefact[Create SwaggerUI]
+        deploy_artefact[Deploy to S3]
+
+        create_artefact --> deploy_artefact
+    end
+```
+
 
 
 <!-- CONTRIBUTING -->
