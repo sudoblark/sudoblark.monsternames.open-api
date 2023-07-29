@@ -1,0 +1,77 @@
+name: Publish OpenAPI to S3 on merge to main
+
+env:
+  OPEN_API_YAML_PATH: open-api.yaml
+  AWS_ACCESS_KEY_ID: ${{ secrets.SUDOBLARK_AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.SUDOBLARK_AWS_ACCESS_KEY_VALUE }}
+  AWS_DEFAULT_REGION: eu-west-2
+  MONSTERNAMES_OPENAPI_STATIC_CONTENT_BUCKET: sudoblark-prod-monsternames-static-content
+  SWAGGER_UI_ARTEFACT_PATH: swagger-ui-build
+  ENVIRONMENT: Prod
+  # Automatically generated token unique to this repo per workflow execution
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  deployments: write
+
+jobs:
+  build:
+    name: Build Swagger UI
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Swagger UI artefact
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui-build
+          spec-file: ${{ env.OPEN_API_YAML_PATH }}
+
+      - name: Upload Swagger UI artefact
+        uses: actions/upload-artifact@v2
+        with:
+          name: swagger-ui
+          path: ${{ env.SWAGGER_UI_ARTEFACT_PATH }}
+
+  deploy:
+    name: Deploy SwaggerUI
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.SWAGGER_UI_ARTEFACT_PATH }}
+
+      - name: Create GitHub deployment
+        uses: chrnorm/deployment-action@releases/v1
+        id: deployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN}}
+          description: 'monsternames OpenAPI SwaggerUI'
+          environment: ${{ env.ENVIRONMENT }}
+
+      - name: Upload S3
+        uses: shallwefootball/s3-upload-action@master
+        id: S3
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: ${{ env.SWAGGER_UI_ARTEFACT_PATH }}
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_url: https://sudoblark.com/api/monsternames
+          state: 'success'
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+
+

@@ -1,0 +1,19 @@
+name: OpenAPI checks on pull request
+
+env:
+  OPEN_API_YAML_PATH: open-api.yaml
+
+on: [pull_request]
+
+jobs:
+  validation:
+    name: OpenAPI validate
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Swagger-cli validate
+        uses: mpetrunic/swagger-cli-action@v1.0.0
+        with:
+          command: "validate ${{ env.OPEN_API_YAML_PATH }}"
+
