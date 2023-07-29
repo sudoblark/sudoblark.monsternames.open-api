@@ -112,7 +112,7 @@ docker run -it \
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-f<!-- CI/CD -->
+<!-- CI/CD -->
 ## CI/CD setup
 
 ```mermaid
@@ -131,8 +131,6 @@ flowchart TD
         deploy_artefact --> github_deployment
     end
 ```
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
