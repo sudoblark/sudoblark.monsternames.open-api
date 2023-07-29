@@ -21,32 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install npm
-        run: |
-          # Homebrew is included on agents by default: 
-          # https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2004-Readme.md
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install npm
-        env:
-          # Stops homebrew auto-updating everything else
-          HOMEBREW_NO_AUTO_UPDATE: 1
-
-      - name: Install swagger-cli
-        run: |
-          npm install -g @apidevtools/swagger-cli
-
-      - name: Run swagger-cli
-        id: validator
-        run: |
-          swagger-cli validate ${{ env. OPEN_API_YAML_PATH}}
-
-      - name: Create/Replace comment
-        if: always()
-        uses: peter-evans/create-or-update-comment@v3
+      - name: Swagger-cli validate
+        uses: mpetrunic/swagger-cli-action@v1.0.0
         with:
-          issue-number: ${{ github.event.number }}
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          edit-mode: replace
-          body: |
-            # Swagger Validation Results
-            ${{ steps.validator.outputs.stdout }}
+          command: "validate ${{ env.OPEN_API_YAML_PATH }}"
+
