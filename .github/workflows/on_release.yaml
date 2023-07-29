@@ -8,6 +8,8 @@ env:
   MONSTERNAMES_OPENAPI_STATIC_CONTENT_BUCKET: sudoblark-prod-monsternames-static-content
   SWAGGER_UI_ARTEFACT_PATH: swagger-ui-build
   ENVIRONMENT: Prod
+  # Automatically generated token unique to this repo per workflow execution
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 on:
   release:
     types: [published]
