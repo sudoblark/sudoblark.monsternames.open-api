@@ -29,13 +29,15 @@ jobs:
             ${{ env.OPEN_API_YAML_PATH }}
 
       - name: Find Comment
+        if: always()
         uses: peter-evans/find-comment@v2
         id: find-comment
         with:
-          issue-number: ${{ github.event.number }}}
+          issue-number: ${{ github.event.number }}
           comment-author: 'github-actions[bot]'
 
       - name: Create/Replace comment
+        if: always()
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
