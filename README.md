@@ -122,7 +122,7 @@ flowchart TD
         validator[Validate Swagger]
     end
 
-    subgraph on_release[On Release]
+    subgraph on_merge_to_main[On merge to main]
         create_artefact[Create SwaggerUI]
         github_deployment[Update GitHub deployment]
         deploy_artefact[Deploy to S3]

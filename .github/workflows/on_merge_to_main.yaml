@@ -10,9 +10,11 @@ env:
   ENVIRONMENT: Prod
   # Automatically generated token unique to this repo per workflow execution
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 permissions:
   deployments: write
