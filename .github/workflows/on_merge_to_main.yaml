@@ -33,11 +33,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build Swagger UI artefact
-        uses: Legion2/swagger-ui-action@v1
+      - name: Download SwaggerUI
+        run: |
+          npm install --prefix swagger/ swagger-ui-dist@5.4.2
+          mv swagger/node_modules/swagger-ui-dist swagger-ui-build
+        shell: bash
+
+      - name: Replace OpenAPI definition with our own
+        uses: jacobtomlinson/gha-find-replace@v3
         with:
-          output: swagger-ui-build
-          spec-file: ${{ env.OPEN_API_YAML_PATH }}
+          find: "https://petstore.swagger.io/v2/swagger.json"
+          replace: "https://github.com/sudoblark/monsternames.open-api/blob/main/open-api.yaml/"
+          regex: false
+          include: swagger-ui-build/swagger-initializer.js
 
       - name: Upload Swagger UI artefact
         uses: actions/upload-artifact@v2
@@ -61,7 +69,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           environment: ${{ env.ENVIRONMENT }}
           onlyRemoveDeployments: true
-
 
       - name: Create GitHub deployment
         uses: chrnorm/deployment-action@releases/v1
