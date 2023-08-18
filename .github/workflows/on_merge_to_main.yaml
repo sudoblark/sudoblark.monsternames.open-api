@@ -52,7 +52,7 @@ jobs:
         uses: jakejarvis/s3-sync-action@master
         with:
           # As per https://github.com/jakejarvis/s3-sync-action/issues/26
-          args: --follow-symlinks --delete -exclude '*' --include 'index.html'
+          args: --follow-symlinks --delete --exclude '*' --include 'index.html'
         env:
           AWS_S3_BUCKET: ${{ env.MONSTERNAMES_OPENAPI_STATIC_CONTENT_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
