@@ -123,11 +123,9 @@ flowchart TD
     end
 
     subgraph on_merge_to_main[On merge to main]
-        create_artefact[Create SwaggerUI]
         github_deployment[Update GitHub deployment]
         deploy_artefact[Deploy to S3]
 
-        create_artefact --> deploy_artefact
         deploy_artefact --> github_deployment
     end
 ```

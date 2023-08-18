@@ -1,13 +1,10 @@
 name: Publish OpenAPI to S3 on merge to main
 
 env:
-  OPEN_API_YAML_PATH: open-api.yaml
   AWS_ACCESS_KEY_ID: ${{ secrets.SUDOBLARK_AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.SUDOBLARK_AWS_ACCESS_KEY_VALUE }}
   AWS_DEFAULT_REGION: eu-west-2
   MONSTERNAMES_OPENAPI_STATIC_CONTENT_BUCKET: sudoblark-prod-monsternames-static-content
-  SWAGGER_UI_ARTEFACT_PATH: swagger-ui-build
-  SWAGGER_UI_ARTEFACT: swagger-ui
   ENVIRONMENT: Prod
   # Automatically generated token unique to this repo per workflow execution
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -21,47 +18,16 @@ on:
       - '.github/**'
       - 'LICENSE.txt'
 
-
 permissions:
   contents: read
   deployments: write
 
 jobs:
-  build:
-    name: Build Swagger UI
+  deploy:
+    name: Deploy SwaggerUI
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-
-      - name: Download SwaggerUI
-        run: |
-          npm install --prefix swagger/ swagger-ui-dist@5.4.2
-          mv swagger/node_modules/swagger-ui-dist swagger-ui-build
-        shell: bash
-
-      - name: Replace OpenAPI definition with our own
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          find: "https://petstore.swagger.io/v2/swagger.json"
-          replace: "https://github.com/sudoblark/monsternames.open-api/blob/main/open-api.yaml/"
-          regex: false
-          include: swagger-ui-build/swagger-initializer.js
-
-      - name: Upload Swagger UI artefact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.SWAGGER_UI_ARTEFACT }}
-          path: ${{ env.SWAGGER_UI_ARTEFACT_PATH }}
-
-  deploy:
-    name: Deploy SwaggerUI
-    needs: build
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.SWAGGER_UI_ARTEFACT }}
-          path: ${{ env.SWAGGER_UI_ARTEFACT_PATH }}
 
       - name: Delete GitHub deployments
         uses: strumwolf/delete-deployment-environment@v2.2.3
@@ -87,7 +53,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
-          SOURCE_DIR: ${{ env.SWAGGER_UI_ARTEFACT_PATH }}
+          SOURCE_DIR: index.html
 
       - name: Update deployment status (success)
         if: success()
