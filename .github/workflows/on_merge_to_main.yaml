@@ -51,13 +51,13 @@ jobs:
       - name: Sync artefact to S3
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --follow-symlinks --delete
+          # As per https://github.com/jakejarvis/s3-sync-action/issues/26
+          args: --follow-symlinks --delete -exclude '*' --include 'index.html'
         env:
           AWS_S3_BUCKET: ${{ env.MONSTERNAMES_OPENAPI_STATIC_CONTENT_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
-          SOURCE_DIR: ./index.html
 
       - name: Update deployment status (success)
         if: success()
