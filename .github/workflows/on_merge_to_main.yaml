@@ -60,7 +60,7 @@ jobs:
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_url: https://sudoblark.com/api/monsternames
+          target_url: https://monsternames.sudoblark.com
           state: 'success'
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
@@ -69,6 +69,6 @@ jobs:
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_url: https://sudoblark.com/api/monsternames
+          target_url: https://monsternames.sudoblark.com
           state: 'failure'
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
